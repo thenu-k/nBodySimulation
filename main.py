@@ -5,13 +5,14 @@ import matplotlib.pyplot  as plt
 import time
 import keyboard
 
-def returnAcceleration(pos, masses, currCount):
+def returnAcceleration(pos,vel, masses, detectCollisionsOf):
     #pos = N x 3
     #mass = N x 1
     softening = 0.1
     N = pos.shape[0]
     a = np.zeros((N,3)) # N x 3
     stop = False
+    energy = 0
     for i in range(N):
         for j in range(N):
             relX = pos[j,0] - pos[i,0]
@@ -23,9 +24,14 @@ def returnAcceleration(pos, masses, currCount):
             a[i,0] += 6.67*10**(2) * relX * detR *  masses[j] # note the +=. We are summing up the accels for each particle (N) rel to every other particle (N). so it comes to N**2
             a[i,1] += 6.67*10**(2) * relY * detR *  masses[j]
             a[i,2] += 6.67*10**(2) * relZ * detR *  masses[j]
-            if i!=j and dis<0.5 and currCount>25:
+            if (set([i,j])==set(detectCollisionsOf)) and dis<0.1:
                 stop = True
-    return [a, stop]
+            # checking the total energy
+            if i!=j:
+                energy += -(6.67*10**(2) * masses[i] * masses[j])
+        detV = (vel[i,0]**2 + vel[i,1]**2 + vel[i,2]**2)**0.5
+        energy += 0.5*masses[i]*(detV**2)
+    return [a, stop, energy]
 
 # Position data ------
 pos = np.array(
@@ -33,8 +39,8 @@ pos = np.array(
         [0,0,0],
         [10,0,0],
         [20,0,0],
-        [30,0,0],
-        [29.9,0,0]
+        [20.1,0,0],
+        [30,0,0]
     ]
 )
 vel =  np.array(
@@ -42,35 +48,49 @@ vel =  np.array(
         [0,0,0],
         [0,100,0],
         [0,100,0],
-        [0,100,0],
-        [-200,100,0]
+        [200,100,0],
+        [0,100,0]
     ]
 )
 masses = [1000,1,2,3,0.0001]
-step = 0.0001
+step = 0.0009
 #------------------------
 
-def nBodySimulator(pos, vel, masses, step):
+def nBodySimulator(pos, vel, masses, step, detectCollisionsOf, displayEnergy):
 
     colors = ['red','green', 'blue', 'magenta', 'violet', 'orange', 'yellow', 'cyan']
     N = pos.shape[0]
 
     # Initial accelerations
-    [accel,stop] = returnAcceleration( pos, masses, 0)
+    [accel,stop, energy] = returnAcceleration( pos,vel, masses, detectCollisionsOf)
+    #print(energy)
     posHistory = [pos[0:N, 0:2].tolist()]
     tempPos = np.array(pos)
-    plot = plt.scatter(tempPos[::, 0], tempPos[::, 1],color=colors[0:N])
+    if displayEnergy==True:
+        plot = plt.subplot(1, 2, 1)  
+        plot.scatter(tempPos[::, 0], tempPos[::, 1],color=colors[0:N])
+        plot2 = plt.subplot(1, 2, 2)
+        plot2.scatter(0, energy)
+    else: 
+        plot = plt.scatter(tempPos[::, 0], tempPos[::, 1],color=colors[0:N])
     plt.pause(0.5)
-
+    plot.remove()
     for i in range(100000000000000):
         # break
         vel = vel +  accel*step/2
         pos = pos + vel*step
-        [accel,stop] = returnAcceleration(pos, masses,i)
+        [accel,stop, energy] = returnAcceleration(pos,vel, masses, detectCollisionsOf)
+        #print(energy)
         vel += accel*step/2
         posHistory.append(pos[0:N, 0:2].tolist())
         tempPos = np.array(pos)
-        plot = plt.scatter(tempPos[::, 0], tempPos[::, 1],color=colors[0:N])
+        if displayEnergy==True:
+            plot = plt.subplot(1, 2, 1)  
+            plot.scatter(tempPos[::, 0], tempPos[::, 1],color=colors[0:N])
+            plot2 = plt.subplot(1, 2, 2)
+            plot2.scatter(i*step, energy)
+        else: 
+            plot = plt.scatter(tempPos[::, 0], tempPos[::, 1],color=colors[0:N])
         if keyboard.is_pressed('c') or stop==True:
             break
         plt.pause(0.01)
@@ -80,4 +100,4 @@ def nBodySimulator(pos, vel, masses, step):
     plt.show()
 
 # ---- Function Call
-nBodySimulator(pos, vel, masses, step)
+nBodySimulator(pos, vel, masses, step, [3,7], False)
