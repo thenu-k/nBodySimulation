@@ -117,7 +117,7 @@ def nBodySimulator(pos, vel, masses, step, detectCollisionsOf, displayEnergy, nu
 
 
 # ---- Function Call
-dimensions = 3
-numSteps = 3000
+dimensions = 2
+numSteps = 300
 displayTrails = False
 nBodySimulator(pos2, vel2, masses2, step, [3,7000], False, numSteps, dimensions, displayTrails)
