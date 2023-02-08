@@ -28,6 +28,8 @@ pos = np.array(
     [
         [0,0,0],
         [10,0,0],
+        [20,0,0],
+        [30,0,0],
         # [5,5,0]
     ]
 )
@@ -35,36 +37,44 @@ vel =  np.array(
     [
         [0,0,0],
         [0,300,0],
+        [0,100,0],
+        [0,100,0],
         # [0,0,0]
     ]
 )
-masses = [1000,1]
+masses = [1000,1,2,3]
+step = 0.001
 #------------------------
 
-N = pos.shape[0]
-step = 0.001
-colors = ['red','green', 'blue', 'magenta', 'violet', 'orange', 'yellow', 'cyan']
+def nBodySimulator(pos, vel, masses, step):
 
-# Initial accelerations
-accel = returnAcceleration( pos, masses)
-posHistory = [pos[0:N, 0:2].tolist()]
-tempPos = np.array(pos)
-plot = plt.scatter(tempPos[::, 0], tempPos[::, 1],color=colors[0:N])
-plt.pause(0.5)
+    colors = ['red','green', 'blue', 'magenta', 'violet', 'orange', 'yellow', 'cyan']
+    N = pos.shape[0]
+    step = 0.001
 
-for i in range(10000000):
-    # break
-    vel = vel +  accel*step/2
-    pos = pos + vel*step
-    accel = returnAcceleration(pos, masses)
-    vel += accel*step/2
-    posHistory.append(pos[0:N, 0:2].tolist())
+    # Initial accelerations
+    accel = returnAcceleration( pos, masses)
+    posHistory = [pos[0:N, 0:2].tolist()]
     tempPos = np.array(pos)
     plot = plt.scatter(tempPos[::, 0], tempPos[::, 1],color=colors[0:N])
-    if keyboard.is_pressed('c'):
-        break
-    plt.pause(0.01)
-    #plot.remove()
+    plt.pause(0.5)
 
-posHistory = np.array(posHistory)
-plt.show()
+    for i in range(10000000):
+        # break
+        vel = vel +  accel*step/2
+        pos = pos + vel*step
+        accel = returnAcceleration(pos, masses)
+        vel += accel*step/2
+        posHistory.append(pos[0:N, 0:2].tolist())
+        tempPos = np.array(pos)
+        plot = plt.scatter(tempPos[::, 0], tempPos[::, 1],color=colors[0:N])
+        if keyboard.is_pressed('c'):
+            break
+        plt.pause(0.01)
+        #plot.remove()
+
+    posHistory = np.array(posHistory)
+    plt.show()
+
+# ---- Function Call
+nBodySimulator(pos, vel, masses, step)
