@@ -18,9 +18,9 @@ def returnAcceleration(pos, masses):
             relZ = pos[j,2] - pos[i,2]
             detR = (relX**2 + relY**2 + relZ**2 + softening**0.2)**(-3/2)
             # the relX makes sure that the accel due to itself becomes 0
-            a[i,0] += 6.67*10**(2) * relX * detR *  1 # note the +=. We are summing up the accels for each particle (N) rel to every other particle (N). so it comes to N**2
-            a[i,1] += 6.67*10**(2) * relY * detR *  1
-            a[i,2] += 6.67*10**(2) * relZ * detR *  1
+            a[i,0] += 6.67*10**(2) * relX * detR *  masses[j] # note the +=. We are summing up the accels for each particle (N) rel to every other particle (N). so it comes to N**2
+            a[i,1] += 6.67*10**(2) * relY * detR *  masses[j]
+            a[i,2] += 6.67*10**(2) * relZ * detR *  masses[j]
     return a
 
 # Position data ------
@@ -28,17 +28,17 @@ pos = np.array(
     [
         [0,0,0],
         [10,0,0],
-        [5,5,0]
+        # [5,5,0]
     ]
 )
 vel =  np.array(
     [
         [0,0,0],
-        [0,0,0],
-        [0,0,0]
+        [0,10,0],
+        # [0,0,0]
     ]
 )
-masses = [1,1]
+masses = [100,1]
 #------------------------
 
 N = pos.shape[0]
