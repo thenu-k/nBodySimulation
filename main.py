@@ -55,13 +55,13 @@ vel =  np.array(
 masses = [1000,1,2,3]
 step = 0.001
 
-numParticles = 100
+numParticles = 30
 pos2 = np.random.rand(numParticles,3)
 vel2 = np.random.rand(numParticles,3)
 masses2 = np.random.rand(numParticles)
 #------------------------
 
-def nBodySimulator(pos, vel, masses, step, detectCollisionsOf, displayEnergy, numSteps):
+def nBodySimulator(pos, vel, masses, step, detectCollisionsOf, displayEnergy, numSteps, dimensions, displayTrails):
 
     plotHistory = []
 
@@ -78,6 +78,9 @@ def nBodySimulator(pos, vel, masses, step, detectCollisionsOf, displayEnergy, nu
     tempPos = np.array(pos)
 
     for i in range(numSteps):
+        # completion %
+        currentPercentage = (i/numSteps)*100
+        print('Completion: '+ "{:.2f}".format(currentPercentage) + ' %', end='\r')
         # break
         vel = vel +  accel*step/2
         pos = pos + vel*step
@@ -92,16 +95,29 @@ def nBodySimulator(pos, vel, masses, step, detectCollisionsOf, displayEnergy, nu
 
     posHistory = np.array(posHistory)
     # print(energyHistory)
-    fig, ax = plt.subplots()
+
+
+    fig = plt.figure()
+    if dimensions == 3:
+        ax = plt.axes(projection='3d')
+    if dimensions == 2:
+        ax = plt.axes()
     def animate(count):
         currentXValues =  posHistory[count,0:N,0]
         currentYValues =  posHistory[count,0:N,1]
         currentZValues =  posHistory[count,0:N,2]
-        #ax.clear()
-        ax.scatter(currentXValues, currentYValues,color=colors[0:N])
+        if displayTrails==False: 
+            ax.clear()
+        if dimensions == 3:
+            ax.scatter(currentXValues, currentYValues,currentZValues, color=colors[0:N])
+        if dimensions ==2: 
+            ax.scatter(currentXValues, currentYValues, color=colors[0:N])
     ani = FuncAnimation(fig, animate, frames=numSteps, interval=5, repeat=False)
     plt.show()
 
 
 # ---- Function Call
-nBodySimulator(pos, vel, masses, step, [3,7000], False, 3000)
+dimensions = 3
+numSteps = 3000
+displayTrails = False
+nBodySimulator(pos2, vel2, masses2, step, [3,7000], False, numSteps, dimensions, displayTrails)
