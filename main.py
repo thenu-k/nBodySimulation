@@ -34,15 +34,15 @@ pos = np.array(
 vel =  np.array(
     [
         [0,0,0],
-        [0,10,0],
+        [0,300,0],
         # [0,0,0]
     ]
 )
-masses = [100,1]
+masses = [1000,1]
 #------------------------
 
 N = pos.shape[0]
-step = 0.01
+step = 0.001
 colors = ['red','green', 'blue', 'magenta', 'violet', 'orange', 'yellow', 'cyan']
 
 # Initial accelerations
