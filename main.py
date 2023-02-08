@@ -32,29 +32,28 @@ pos = np.array(
     [
         [0,0,0],
         [10,0,0],
-        # [20,0,0],
-        # [30,0,0],
-        # [30.1,0,0]
+        [20,0,0],
+        [30,0,0],
+        [29.9,0,0]
     ]
 )
 vel =  np.array(
     [
+        [0,0,0],
         [0,100,0],
-        [0,-100,0],
-        # [0,100,0],
-        # [0,100,0],
-        # [-200,100,0]
+        [0,100,0],
+        [0,100,0],
+        [-200,100,0]
     ]
 )
-masses = [1000,1000,]
-step = 0.001
+masses = [1000,1,2,3,0.0001]
+step = 0.0001
 #------------------------
 
 def nBodySimulator(pos, vel, masses, step):
 
     colors = ['red','green', 'blue', 'magenta', 'violet', 'orange', 'yellow', 'cyan']
     N = pos.shape[0]
-    step = 0.001
 
     # Initial accelerations
     [accel,stop] = returnAcceleration( pos, masses, 0)
