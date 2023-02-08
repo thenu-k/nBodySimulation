@@ -23,9 +23,7 @@ def returnAcceleration(pos, masses, currCount):
             a[i,0] += 6.67*10**(2) * relX * detR *  masses[j] # note the +=. We are summing up the accels for each particle (N) rel to every other particle (N). so it comes to N**2
             a[i,1] += 6.67*10**(2) * relY * detR *  masses[j]
             a[i,2] += 6.67*10**(2) * relZ * detR *  masses[j]
-            if i!=j and dis<1 and currCount>25:
-                print(i,j)
-                print('stop')
+            if i!=j and dis<0.5 and currCount>25:
                 stop = True
     return [a, stop]
 
