@@ -40,19 +40,19 @@ pos = np.array(
     [
         [0,0,0],
         [10,0,0],
-        [5,5,0],
-        [3,3,3]
+        [20,0,0],
+        [30,0,0]
     ]
 )
 vel =  np.array(
     [
-        [0,10,0],
         [0,0,0],
-        [0,0,0],
-        [0,0,0]
+        [0,100,0],
+        [0,100,0],
+        [0,100,0]
     ]
 )
-masses = [1000,1000,1000,1]
+masses = [1000,1,2,3]
 step = 0.001
 
 numParticles = 100
@@ -61,7 +61,7 @@ vel2 = np.random.rand(numParticles,3)
 masses2 = np.random.rand(numParticles)
 #------------------------
 
-def nBodySimulator(pos, vel, masses, step, detectCollisionsOf, displayEnergy):
+def nBodySimulator(pos, vel, masses, step, detectCollisionsOf, displayEnergy, numSteps):
 
     plotHistory = []
 
@@ -76,16 +76,8 @@ def nBodySimulator(pos, vel, masses, step, detectCollisionsOf, displayEnergy):
     posHistory = [pos[0:N, 0:3].tolist()]
     energyHistory = [energy]
     tempPos = np.array(pos)
-    # if displayEnergy==True:
-    #     plot = plt.subplot(1, 2, 1)  
-    #     plot.scatter(tempPos[::, 0], tempPos[::, 1],color=colors[0:N])
-    #     plot2 = plt.subplot(1, 2, 2)
-    #     plot2.scatter(0, energy)
-    # else: 
-    #     plot = plt.scatter(tempPos[::, 0], tempPos[::, 1],color=colors[0:N])
-    # plt.pause(0.5)
-    # plot.remove()
-    for i in range(300):
+
+    for i in range(numSteps):
         # break
         vel = vel +  accel*step/2
         pos = pos + vel*step
@@ -95,31 +87,21 @@ def nBodySimulator(pos, vel, masses, step, detectCollisionsOf, displayEnergy):
         posHistory.append(pos[0:N, 0:3].tolist())
         energyHistory.append(energy)
         tempPos = np.array(pos)
-        # if displayEnergy==True:
-        #     plot = plt.subplot(1, 2, 1)  
-        #     plot.scatter(tempPos[::, 0], tempPos[::, 1],color=colors[0:N])
-        #     plot2 = plt.subplot(1, 2, 2)
-        #     plot2.scatter(i*step, energy)
-        # else: 
-        #     plot = plt.scatter(tempPos[::, 0], tempPos[::, 1],color=colors[0:N])
         if keyboard.is_pressed('c') or stop==True:
             break
-        # plt.pause(0.01)
-        # plot.remove()
 
     posHistory = np.array(posHistory)
-    # plt.show()
     # print(energyHistory)
     fig, ax = plt.subplots()
     def animate(count):
         currentXValues =  posHistory[count,0:N,0]
         currentYValues =  posHistory[count,0:N,1]
         currentZValues =  posHistory[count,0:N,2]
-        ax.clear()
-        ax.scatter(currentXValues, currentYValues)
-    ani = FuncAnimation(fig, animate, frames=200, interval=5, repeat=False)
+        #ax.clear()
+        ax.scatter(currentXValues, currentYValues,color=colors[0:N])
+    ani = FuncAnimation(fig, animate, frames=numSteps, interval=5, repeat=False)
     plt.show()
 
 
 # ---- Function Call
-nBodySimulator(pos, vel, masses, step, [3,7000], False)
+nBodySimulator(pos, vel, masses, step, [3,7000], False, 3000)
