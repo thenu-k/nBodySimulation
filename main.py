@@ -47,7 +47,7 @@ pos = np.array(
 vel =  np.array(
     [
         [0,0,0],
-        [0,100,0],
+        [0,200,0],
         [0,100,0],
         [0,100,0]
     ]
@@ -57,8 +57,8 @@ step = 0.001
 
 numParticles = 30
 pos2 = np.random.randint(-10,10,(numParticles,3))
-minPos = -50
-maxPos = 50
+minPos = -30
+maxPos = 30
 vel2 = np.random.randint(-100,100,(numParticles,3))
 masses2 = np.random.randint(500,1000,(1, numParticles))[0]
 #------------------------
@@ -130,6 +130,6 @@ def nBodySimulator(pos, vel, masses, step, detectCollisionsOf, displayEnergy, nu
 
 # ---- Function Call
 dimensions = 3
-numSteps = 1000
-displayTrails = False
-nBodySimulator(pos2, vel2, masses2, step, [3,7000], False, numSteps, dimensions, displayTrails)
+numSteps = 500
+displayTrails = True
+nBodySimulator(pos, vel, masses, step, [3,7000], False, numSteps, dimensions, displayTrails)
