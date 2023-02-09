@@ -56,9 +56,11 @@ masses = [1000,1,2,3]
 step = 0.001
 
 numParticles = 30
-pos2 = np.random.rand(numParticles,3)
-vel2 = np.random.rand(numParticles,3)
-masses2 = np.random.rand(numParticles)
+pos2 = np.random.randint(-10,10,(numParticles,3))
+minPos = -50
+maxPos = 50
+vel2 = np.random.randint(-100,100,(numParticles,3))
+masses2 = np.random.randint(500,1000,(1, numParticles))[0]
 #------------------------
 
 def nBodySimulator(pos, vel, masses, step, detectCollisionsOf, displayEnergy, numSteps, dimensions, displayTrails):
@@ -100,8 +102,13 @@ def nBodySimulator(pos, vel, masses, step, detectCollisionsOf, displayEnergy, nu
     fig = plt.figure()
     if dimensions == 3:
         ax = plt.axes(projection='3d')
+        ax.set_xlim3d(minPos, maxPos)
+        ax.set_ylim3d(minPos, maxPos)
+        ax.set_zlim3d(minPos, maxPos)
     if dimensions == 2:
         ax = plt.axes()
+        ax.set_xlim(minPos, maxPos)
+        ax.set_ylim(minPos, maxPos)
     def animate(count):
         currentXValues =  posHistory[count,0:N,0]
         currentYValues =  posHistory[count,0:N,1]
@@ -110,14 +117,19 @@ def nBodySimulator(pos, vel, masses, step, detectCollisionsOf, displayEnergy, nu
             ax.clear()
         if dimensions == 3:
             ax.scatter(currentXValues, currentYValues,currentZValues, color=colors[0:N])
+            ax.set_xlim3d(minPos, maxPos)
+            ax.set_ylim3d(minPos, maxPos)
+            ax.set_zlim3d(minPos, maxPos)
         if dimensions ==2: 
             ax.scatter(currentXValues, currentYValues, color=colors[0:N])
+            ax.set_xlim(minPos, maxPos)
+            ax.set_ylim(minPos, maxPos)
     ani = FuncAnimation(fig, animate, frames=numSteps, interval=5, repeat=False)
     plt.show()
 
 
 # ---- Function Call
-dimensions = 2
-numSteps = 300
+dimensions = 3
+numSteps = 1000
 displayTrails = False
 nBodySimulator(pos2, vel2, masses2, step, [3,7000], False, numSteps, dimensions, displayTrails)
