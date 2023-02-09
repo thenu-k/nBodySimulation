@@ -41,6 +41,7 @@ pos = np.array(
         [0,0,0],
         [10,0,0],
         [20,0,0],
+        [20.1,0,0],
         [30,0,0]
     ]
 )
@@ -49,10 +50,11 @@ vel =  np.array(
         [0,0,0],
         [0,200,0],
         [0,100,0],
+        [100,100,0],
         [0,100,0]
     ]
 )
-masses = [1000,1,2,3]
+masses = [1000,1,2,0.001,3]
 step = 0.001
 
 numParticles = 30
@@ -66,11 +68,13 @@ masses2 = np.random.randint(500,1000,(1, numParticles))[0]
 def nBodySimulator(pos, vel, masses, step, detectCollisionsOf, displayEnergy, numSteps, dimensions, displayTrails):
 
     plotHistory = []
-
-    colors = []
-    for i in range(200):
-        colors.append('#%06X' % randint(0, 0xFFFFFF))
     N = pos.shape[0]
+    if N>9:
+        colors = []
+        for i in range(200):
+            colors.append('#%06X' % randint(0, 0xFFFFFF))
+    else:
+        colors = ['red', 'green', 'blue', 'orange', 'magenta', 'indigo', 'violet', 'yellow', 'cyan']
 
     # Initial accelerations
     [accel,stop, energy] = returnAcceleration( pos,vel, masses, detectCollisionsOf)
@@ -129,7 +133,7 @@ def nBodySimulator(pos, vel, masses, step, detectCollisionsOf, displayEnergy, nu
 
 
 # ---- Function Call
-dimensions = 3
-numSteps = 500
+dimensions = 2
+numSteps = 1000
 displayTrails = True
-nBodySimulator(pos, vel, masses, step, [3,7000], False, numSteps, dimensions, displayTrails)
+nBodySimulator(pos, vel, masses, step, [3,40], False, numSteps, dimensions, displayTrails)
